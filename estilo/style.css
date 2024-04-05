@@ -1,3 +1,4 @@
+/* style.css */
 body, html {
     margin: 0;
     padding: 0;
@@ -39,4 +40,54 @@ header {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+}
+
+.input-area button:hover {
+    background-color: #0056b3;
+}
+
+#listaTarefas {
+    list-style: none;
+    padding: 0;
+}
+
+#listaTarefas li {
+    background-color: #fff;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#listaTarefas li.completed {
+    text-decoration: line-through;
+    color: #aaa;
+}
+
+.tarefa-btn {
+    margin-left: 10px;
+    border: none;
+    border-radius: 4px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.btn-remover {
+    background-color: #ff6347;
+    color: white;
+}
+
+.btn-remover:hover {
+    background-color: #d9534f;
+}
+
+.btn-concluir {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-concluir:hover {
+    background-color: #218838;
 }
