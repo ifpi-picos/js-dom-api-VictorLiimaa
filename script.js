@@ -2,12 +2,14 @@ document.addEventListener('DOMContentLoaded', () => {
     inicializarApp();
 });
 
+const accessToken = 'ba2fc45ae1992145acae386264167665fbaf3578'; // Substitua pelo seu token real
+
 function inicializarApp() {
     document.getElementById('btnAdicionar').addEventListener('click', adicionarTarefa);
     carregarTarefas();
 }
 
-function adicionarTarefa() {
+async function adicionarTarefa() {
     const input = document.getElementById('inputTarefa');
     const textoTarefa = input.value.trim();
 
@@ -17,25 +19,36 @@ function adicionarTarefa() {
     }
 
     const tarefa = {
-        id: Date.now(),
-        texto: textoTarefa,
-        concluida: false
+        content: textoTarefa
     };
 
-    salvarTarefa(tarefa);
-    exibirTarefaNaLista(tarefa);
+    await fetch('https://api.todoist.com/rest/v2/tasks', {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(tarefa)
+    });
+
+    carregarTarefas();
     input.value = ''; // Limpar o campo de entrada
 }
 
-function salvarTarefa(tarefa) {
-    const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
-    tarefas.push(tarefa);
-    localStorage.setItem('tarefas', JSON.stringify(tarefas));
-}
+async function carregarTarefas() {
+    const response = await fetch('https://api.todoist.com/rest/v2/tasks', {
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    });
 
-function carregarTarefas() {
-    const tarefas = JSON.parse(localStorage.getItem('tarefas')) || [];
-    tarefas.forEach(tarefa => exibirTarefaNaLista(tarefa));
+    const tarefas = await response.json();
+    const lista = document.getElementById('listaTarefas');
+    lista.innerHTML = ''; // Limpar lista existente antes de recarregar
+
+    tarefas.forEach(tarefa => {
+        exibirTarefaNaLista(tarefa);
+    });
 }
 
 function exibirTarefaNaLista(tarefa) {
@@ -43,12 +56,12 @@ function exibirTarefaNaLista(tarefa) {
     const item = document.createElement('li');
     item.setAttribute('data-id', tarefa.id);
 
-    if (tarefa.concluida) {
+    if (tarefa.completed) {
         item.classList.add('completed');
     }
 
     item.innerHTML = `
-        <span>${tarefa.texto}</span>
+        <span>${tarefa.content}</span>
         <button class="tarefa-btn btn-concluir">Concluir</button>
         <button class="tarefa-btn btn-remover">Remover</button>
     `;
@@ -62,19 +75,24 @@ function exibirTarefaNaLista(tarefa) {
     lista.appendChild(item);
 }
 
-function concluirTarefa(id) {
-    const tarefas = JSON.parse(localStorage.getItem('tarefas'));
-    const tarefaIndex = tarefas.findIndex(tarefa => tarefa.id === id);
-    tarefas[tarefaIndex].concluida = !tarefas[tarefaIndex].concluida;
-    localStorage.setItem('tarefas', JSON.stringify(tarefas));
+async function concluirTarefa(id) {
+    await fetch(`https://api.todoist.com/rest/v2/tasks/${id}/close`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    });
 
-    document.querySelector(`[data-id="${id}"]`).classList.toggle('completed');
+    carregarTarefas();
 }
 
-function removerTarefa(id, item) {
-    const tarefas = JSON.parse(localStorage.getItem('tarefas'));
-    const novasTarefas = tarefas.filter(tarefa => tarefa.id !== id);
-    localStorage.setItem('tarefas', JSON.stringify(novasTarefas));
+async function removerTarefa(id, item) {
+    await fetch(`https://api.todoist.com/rest/v2/tasks/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`
+        }
+    });
 
     item.remove();
 }
