@@ -11,11 +11,13 @@
         <header>
             <h1>Minhas Tarefas</h1>
         </header>
-        <div class="input-area">
-            <input type="text" id="inputTarefa" placeholder="Adicione uma nova tarefa aqui...">
-            <button id="btnAdicionar">Adicionar</button>
-        </div>
-        <ul id="listaTarefas"></ul>
+        <form id="formTarefa" class="input-area">
+            <input id="inputTarefa" type="text" placeholder="Adicionar tarefa..." required>
+            <input id="inputData" type="date" required>
+            <input id="inputEtiqueta" type="text" placeholder="Adicionar etiquetas (separadas por vírgula)">
+            <button type="submit" id="btnAdicionar">Adicionar</button>
+        </form>
+            <ul id="listaTarefas"></ul>
     </div>
     <script src="script.js"></script>
 </body>
