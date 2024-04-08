@@ -8,7 +8,7 @@ body, html {
 }
 
 .container {
-    max-width: 60%;
+    max-width: 90%;
     margin: 20px auto;
     padding: 20px;
     background-color: #fff; 
@@ -156,4 +156,41 @@ header {
 
 .day-names div, .days-grid div {
     padding: 5px 0;
+}
+
+@media (min-width: 768px) {
+    .container {
+        max-width: 60%;
+    }
+}
+
+@media (max-width: 767px) {
+    body, html {
+        font-size: 14px;
+    }
+    .input-area {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .input-area input[type="text"],
+    .input-area input[type="date"],
+    .input-area select,
+    .input-area button {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .input-area button {
+        margin-top: 10px; 
+    }
+
+    .calendar {
+        width: 100%; 
+    }
+
+    .days-grid div, .day-names div {
+        padding: 2px 0; 
+        font-size: 0.8em;
+    }
 }
